@@ -55,19 +55,20 @@ public class ProductController extends AbstractController {
             @RequestParam(required = false) Long category,
             @RequestParam(required = false) String amountType,
             @RequestParam(required = false) String status,
-            // @RequestParam(required = false) String seller,
+            @RequestParam(required = false) String sellerId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice) {
         
-        logRequest("Get Products", page, limit, sortBy, sortOrder, q, category, amountType, status, minPrice, maxPrice);
+        logRequest("Get Products", page, limit, sortBy, sortOrder, sellerId, q, category, amountType, status, minPrice, maxPrice);
         
         Sort sort = sortOrder.equalsIgnoreCase("desc") 
             ? Sort.by(sortBy).descending() 
             : Sort.by(sortBy).ascending();
         
         Pageable pageable = PageRequest.of(page, limit, sort);
-        
-        Page<ProductResponse> products = productService.getAllProducts(q, category, amountType, status, minPrice, maxPrice, pageable);
+        logRequest("pagable", pageable);
+        Page<ProductResponse> products = productService.getAllProducts(q, category, amountType, status, sellerId, minPrice, maxPrice, pageable);
+        // logRequest("Shit", products);
         
         return createPageableSuccessResponse("Products retrieved successfully", products, HttpStatus.OK);
     }

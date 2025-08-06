@@ -32,21 +32,22 @@ public class ProductServiceImpl implements ProductService {
             Long category, 
             String amountType,
             String status,
-            // String seller, 
+            String sellerId, 
             BigDecimal minPrice, 
             BigDecimal maxPrice, 
             Pageable pageable) {
-        
-                
+
+        log.info("Getting products with filters - q: {}, category: {}, amountType: {}, status: {}, seller: {}, minPrice: {}, maxPrice: {}, page: {}", q, category, amountType, status, sellerId, minPrice, maxPrice, pageable.getPageNumber());
+
         // Convert q to lower case if not null
         String query = Sanitization.nullToEmptyString(q);
-        log.info("Getting products with filters - q: {}, category: {}, amountType: {}, status: {}, minPrice: {}, maxPrice: {}, page: {}", query, category, amountType, status, minPrice, maxPrice, pageable.getPageNumber());
 
         // Convert string parameters to enums
         Product.AmountType amountTypeEnum = amountType != null ? Product.AmountType.valueOf(amountType) : null;
         Product.ProductStatus statusEnum = status != null ? Product.ProductStatus.valueOf(status) : null;
+                
+        Page<Product> products = productRepository.findProductsWithFilters(query, category, amountTypeEnum, statusEnum, sellerId, minPrice, maxPrice, pageable);
         
-        Page<Product> products = productRepository.findProductsWithFilters(query, category, amountTypeEnum, statusEnum, minPrice, maxPrice, pageable);
         return products.map(productMapper::productToProductResponse);
     }
 

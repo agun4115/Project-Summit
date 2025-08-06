@@ -23,6 +23,7 @@ public abstract class AbstractController {
     }
 
     protected ResponseEntity<?> createSuccessResponse(String message, Object data, HttpStatus status) {
+        logger.info("Creating success response: {}", data);
         return ResponseEntity.status(status).body(Map.of("message", message, "data", data));
     }
 

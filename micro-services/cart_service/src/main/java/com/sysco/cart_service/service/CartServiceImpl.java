@@ -14,9 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,6 +33,7 @@ public class CartServiceImpl implements CartService {
         log.info("Getting cart items for user: {}", userId);
 
         List<Cart> cartItems = cartRepository.findByUserId(userId);
+        log.info("Found {} items in cart for user: {}", cartItems, userId);
         return cartMapper.cartListToCartResponseList(cartItems);
     }
     
@@ -40,20 +43,17 @@ public class CartServiceImpl implements CartService {
         log.info("Adding item to cart for user: {}, product: {}", userId, request.getProductId());
         
         // Check if item already exists in cart
-        Optional<Cart> existingCart = cartRepository.findByUserIdAndProductId(
-            userId, request.getProductId());
+        Optional<Cart> existingCart = cartRepository.findByUserIdAndProductId(userId, request.getProductId());
         
         Cart cart;
         if (existingCart.isPresent()) {
             // Update quantity if item already exists
             cart = existingCart.get();
             cart.setCount(cart.getCount() + request.getCount());
-            log.info("Updated existing cart item quantity to: {}", cart.getCount());
         } else {
             // Create new cart item
             cart = cartMapper.cartRequestToCart(request);
             cart.setUserId(userId);
-            log.info("Created new cart item");
         }
         
         Cart savedCart = cartRepository.save(cart);
@@ -62,34 +62,27 @@ public class CartServiceImpl implements CartService {
     
     @Override
     @Transactional
-    public CartResponse updateCartItem(String userId, UpdateCartRequest request) {
-        log.info("Updating cart for user: {}", userId);
-
-        // Clear existing cart items for the user
-        cartRepository.deleteByUserId(userId);
+    public CartResponse updateCartItem(String userId, CartRequest request) {
+        log.info("Adding item to cart for user: {}, product: {}", userId, request.getProductId());
         
-        // Add new items
-        Cart lastSavedCart = null;
-        for (UpdateCartRequest.CartItemRequest item : request.getItems()) {
-            if (item.getCount() > 0) {
-                Cart cart = new Cart();
-                cart.setUserId(userId);
-                cart.setProductId(item.getProductId());
-                cart.setCount(item.getCount());
-                lastSavedCart = cartRepository.save(cart);
-            }
-        }
+        // Check if item already exists in cart
+        Optional<Cart> existingCart = cartRepository.findByUserIdAndProductId(userId, request.getProductId());
         
-        log.info("Cart updated successfully for user: {}", userId);
-        
-        // Return the last saved cart item, or create a dummy response if no items were saved
-        if (lastSavedCart != null) {
-            return cartMapper.cartToCartResponse(lastSavedCart);
+        Cart cart;
+        if (existingCart.isPresent()) {
+            // Update quantity if item already exists
+            cart = existingCart.get();
+            cart.setCount(request.getCount());
         } else {
-            // Return empty cart response if no items were added
-            return new CartResponse();
+            // Create new cart item
+            cart = cartMapper.cartRequestToCart(request);
+            cart.setUserId(userId);
         }
+        
+        Cart savedCart = cartRepository.save(cart);
+        return cartMapper.cartToCartResponse(savedCart);
     }
+        
     
     @Override
     @Transactional

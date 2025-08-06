@@ -53,6 +53,9 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private ProductStatus status = ProductStatus.PENDING;
 
+    @Column(name = "seller_id", nullable = false)
+    private String sellerId;
+
     @Column(name = "reviewed_by")
     private String reviewedBy;
 
@@ -71,7 +74,7 @@ public class Product {
     }
 
     public enum ProductStatus {
-        PENDING, APPROVED, REJECTED, ACTIVE, INACTIVE
+        PENDING, ACCEPTED, REJECTED, ACTIVE, INACTIVE
     }
 
     public enum AmountType {

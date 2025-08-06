@@ -6,8 +6,8 @@ const {
 } = require('../mocks/userData');
 const {
   generateMockToken,
-  isTokenExpired,
-  sanitizeUser
+  sanitizeUser,
+  mockVerifyToken
 } = require('../mocks/authUtils');
 const { createUserProfile } = require('./userService');
 
@@ -41,7 +41,6 @@ const login = async (credentials) => {
   const accessToken = generateMockToken(user);
   
   // Return user data and tokens (excluding password)
-  
   const sanitizedUser = sanitizeUser(user);
   
   return {
@@ -77,48 +76,35 @@ const signup = async (userData) => {
   
   // Return user data (excluding password)
   const userWithoutPassword = sanitizeUser(user);
-const accessToken = generateMockToken(user);    
-  
-  return {
-    data: {
-      user: userWithoutPassword,
-      tokens: {
-        accessToken,
-        expiresIn: 86400, // 24 hours in seconds
-        tokenType: 'Bearer'
-      },
-      message: 'User created successfully. Please check your email for verification instructions.'
-    }
+  const accessToken = generateMockToken(user);    
+    return {
+      data: {
+        user: userWithoutPassword,
+        tokens: {
+          accessToken,
+          expiresIn: 86400, // 24 hours in seconds
+          tokenType: 'Bearer'
+        },
+        message: 'User created successfully. Please check your email for verification instructions.'
+      }
+    };
   };
-};
 
-// const verifyToken = async (token) => {
-//   try {
-//     // Parse mock JWT token
-//     const payload = parseMockToken(token);
+const verifyToken = async (token) => {
+  try {
+    // Parse mock JWT token
+    const user = mockVerifyToken(token);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
     
-//     // Find user in mock database
-//     const user = findUserById(payload.sub);
-//     if (!user) {
-//       throw new Error('User not found');
-//     }
-    
-//     // Return user data (excluding password)
-//     const userWithoutPassword = sanitizeUser(user);
-    
-//     return {
-//       data: {
-//         user: {
-//           ...userWithoutPassword,
-//           roles: [user.role] // For compatibility with role middleware
-//         }
-//       }
-//     };
-//   } catch (error) {
-//     console.error('Mock token verification error:', error);
-//     throw new Error('Invalid or expired token');
-//   }
-// };
+    return {data:user}
+  } catch (error) {
+    console.error('Mock token verification error:', error);
+    throw new Error('Invalid or expired token');
+  }
+};
 
 
 const logout = async (token) => {
@@ -133,6 +119,6 @@ const logout = async (token) => {
 module.exports = {
   login,
   signup,
-//   verifyToken,
+  verifyToken,
   logout
 };

@@ -1,13 +1,37 @@
 // Mock users for development/testing
 const mockUsers = [
   {
-    id: '1',
+    id: '550e8400-e29b-41d4-a716-446655440001',
     username: 'customer1',
     email: 'customer@example.com',
     password: 'Customer123',
     firstName: 'John',
     lastName: 'Doe',
     phoneNumber: '+1234567890',
+    role: 'Customer',
+    emailVerified: true,
+    phoneVerified: true
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440002',
+    username: 'customer2',
+    email: 'customer2@example.com',
+    password: 'Customer123',
+    firstName: 'John',
+    lastName: 'Doe2',
+    phoneNumber: '+1234567892',
+    role: 'Customer',
+    emailVerified: true,
+    phoneVerified: true
+  },
+  {
+    id: '550e8400-e29b-41d4-a716-446655440003',
+    username: 'customer3',
+    email: 'customer3@example.com',
+    password: 'Customer123',
+    firstName: 'John3',
+    lastName: 'Doe',
+    phoneNumber: '+1234567893',
     role: 'Customer',
     emailVerified: true,
     phoneVerified: true

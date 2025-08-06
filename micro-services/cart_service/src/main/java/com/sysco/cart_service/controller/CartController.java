@@ -45,6 +45,8 @@ public class CartController extends AbstractController {
     public ResponseEntity<?> getCartItems(@PathVariable String userId){
         logRequest("Get Cart Items", userId);
         List<CartResponse> cartItems = cartService.getCartByUserId(userId); 
+        logRequest("Get Cart Items", cartItems);
+
         return createSuccessResponse("Cart items retrieved successfully", cartItems, HttpStatus.OK);
     }
 
@@ -56,16 +58,22 @@ public class CartController extends AbstractController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<?> updateCart(@PathVariable String userId, @RequestBody UpdateCartRequest request) {
+    public ResponseEntity<?> updateCart(@PathVariable String userId, @RequestBody CartRequest request) {
         logRequest("Update Cart", userId, request);
         CartResponse updated = cartService.updateCartItem(userId, request);
         return createSuccessResponse("Cart updated successfully", updated, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{userId}/{productId}")
+    public ResponseEntity<?> clearCart(@PathVariable String userId, @PathVariable Long productId) {
+        logRequest("Clear Cart", userId, productId);
+        cartService.removeFromCart(userId, productId);
+        return createSuccessResponse("Cart cleared successfully", HttpStatus.OK);
+    }
     @DeleteMapping("/{userId}")
-    public ResponseEntity<?> clearCart(@RequestParam String userId) {
+    public ResponseEntity<?> clearCart(@PathVariable String userId) {
         logRequest("Clear Cart", userId);
         cartService.clearCart(userId);
-        return createSuccessResponse("Cart cleared successfully", null, HttpStatus.OK);
+        return createSuccessResponse("Cart cleared successfully", HttpStatus.OK);
     }
 }

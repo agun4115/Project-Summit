@@ -1,69 +1,37 @@
+
+const {findUserById} = require('./userData');
 // Mock utilities for authentication
+const tokenMap = {
+  '550e8400-e29b-41d4-a716-446655440001': 'mock_access_token_customer_1',
+  '550e8400-e29b-41d4-a716-446655440002': 'mock_access_token_supplier_2', 
+  '550e8400-e29b-41d4-a716-446655440003': 'mock_access_token_datasteward_3',
+  '550e8400-e29b-41d4-a716-446655440005': 'mock_access_token_supplier_1',
+  "550e8400-e29b-41d4-a716-446655440008" : 'mock_access_token_datasteward_1'
+};
 
-// Generate mock access token (hardcoded)
 const generateMockToken = (user) => {
-  // Simple hardcoded tokens based on user role and ID
-  const tokenMap = {
-    '1': 'mock_access_token_customer_1',
-    '2': 'mock_access_token_supplier_2', 
-    '3': 'mock_access_token_datasteward_3'
-  };
-  
-  return tokenMap[user.id] || `mock_access_token_user_${user.id}`;
+    return tokenMap[user.id];
 };
 
-// Generate mock refresh token (hardcoded)
-const generateMockRefreshToken = (userId) => {
-  const refreshTokenMap = {
-    '1': 'mock_refresh_token_customer_1',
-    '2': 'mock_refresh_token_supplier_2',
-    '3': 'mock_refresh_token_datasteward_3'
-  };
+const mockVerifyToken = (token) => {
+  // Mock verification logic
+  const userId = Object.keys(tokenMap).find(id => tokenMap[id] === token);
   
-  return refreshTokenMap[userId] || `mock_refresh_token_user_${userId}`;
-};
-
-// Parse mock token (simplified)
-const parseMockToken = (token) => {
-  if (!token || !token.startsWith('mock_access_token_')) {
-    throw new Error('Invalid token format');
-  }
-  
-  // Extract user info from hardcoded token
-  const tokenMap = {
-    'mock_access_token_customer_1': { sub: '1', role: 'Customer', email: 'customer@example.com' },
-    'mock_access_token_supplier_2': { sub: '2', role: 'Supplier', email: 'supplier@example.com' },
-    'mock_access_token_datasteward_3': { sub: '3', role: 'Data Steward', email: 'datasteward@example.com' }
-  };
-  
-  const payload = tokenMap[token];
-  if (!payload) {
+  if (!userId) {
     throw new Error('Invalid token');
   }
   
-  return payload;
-};
-
-
-// Parse refresh token to extract user ID (simplified)
-const parseRefreshToken = (refreshToken) => {
-  if (!refreshToken || !refreshToken.startsWith('mock_refresh_token_')) {
-    throw new Error('Invalid refresh token');
-  }
+  // Find user in mock database
+  const user = findUserById(userId);
   
-  // Extract user ID from hardcoded refresh token
-  const refreshTokenMap = {
-    'mock_refresh_token_customer_1': '1',
-    'mock_refresh_token_supplier_2': '2',
-    'mock_refresh_token_datasteward_3': '3'
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return {
+    user: user.id,
+    role: user.role,
   };
-  
-  const userId = refreshTokenMap[refreshToken];
-  if (!userId) {
-    throw new Error('Invalid refresh token');
-  }
-  
-  return userId;
 };
 
 // Remove password from user object
@@ -74,8 +42,6 @@ const sanitizeUser = (user) => {
 
 module.exports = {
   generateMockToken,
-  generateMockRefreshToken,
-  parseMockToken,
-  parseRefreshToken,
-  sanitizeUser
+  sanitizeUser,
+  mockVerifyToken,
 };

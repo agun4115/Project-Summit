@@ -4,7 +4,7 @@ const { ProductSortBy, SortOrder, ProductStatus, ProductType } = require('../enu
  * Default pagination constants
  */
 const PaginationDefaults = Object.freeze({
-  PAGE: 1,
+  PAGE: 0,
   LIMIT: 10,
   MAX_LIMIT: 100
 });

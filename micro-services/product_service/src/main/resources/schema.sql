@@ -13,6 +13,7 @@ CREATE TABLE products (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(50) DEFAULT 'PENDING',
+    seller_id VARCHAR(255) NOT NULL,
     reviewed_by VARCHAR(255),
     reviewed_at TIMESTAMP
 );

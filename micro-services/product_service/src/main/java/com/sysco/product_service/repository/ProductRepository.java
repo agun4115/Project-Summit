@@ -18,6 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
        "(:category IS NULL OR p.categoryId = :category) AND " +
        "(:amountType IS NULL OR p.amountType = :amountType) AND " +
        "(:status IS NULL OR p.status = :status) AND " +
+       "(:sellerId IS NULL OR p.sellerId = :sellerId) AND " +
        "(:minPrice IS NULL OR p.pricePerUnit >= :minPrice) AND " +
        "(:maxPrice IS NULL OR p.pricePerUnit <= :maxPrice)")
 Page<Product> findProductsWithFilters(
@@ -25,6 +26,7 @@ Page<Product> findProductsWithFilters(
     @Param("category") Long category,
     @Param("amountType") Product.AmountType amountType,
     @Param("status") Product.ProductStatus status,
+    @Param("sellerId") String sellerId,
     @Param("minPrice") BigDecimal minPrice,
     @Param("maxPrice") BigDecimal maxPrice,
     Pageable pageable

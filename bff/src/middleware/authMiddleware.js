@@ -1,5 +1,6 @@
 const { verifyToken } = require('../services/authService');
 const { HttpStatus } = require('../enums');
+const {UserRole} = require('../enums');
 
 const ADMIN_ROLES = [UserRole.DATA_STEWARD, UserRole.SUPPLIER];
 const ALL_ROLES = [UserRole.CUSTOMER, UserRole.DATA_STEWARD, UserRole.SUPPLIER];
@@ -20,8 +21,7 @@ const authenticateToken = async (req, res, next) => {
     
     // Verify token with auth microservice
     const verificationResult = await verifyToken(token);
-    
-    if (!verificationResult.data || !verificationResult.data.user) {
+    if (!verificationResult.data) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         success: false,
         error: 'Invalid token',
@@ -29,10 +29,10 @@ const authenticateToken = async (req, res, next) => {
         timestamp: new Date().toISOString()
       });
     }
-    
     // Add user information to request object
     req.user = verificationResult.data.user;
     req.token = token;
+    req.role = verificationResult.data.role;
     
     next();
   } catch (error) {
@@ -45,7 +45,6 @@ const authenticateToken = async (req, res, next) => {
     });
   }
 };
-
 
 /**
  * Check if user has any of the required roles
@@ -62,13 +61,13 @@ const hasRole = (userRole, requiredRoles) => {
  */
 const requireRoles = (allowedRoles) => {
   return (req, res, next) => {
-    if (!hasRole(req.user.role, allowedRoles)) {
+    if (!hasRole(req.role, allowedRoles)) {
       return res.status(HttpStatus.FORBIDDEN).json({
         success: false,
         error: 'Insufficient permissions',
         message: `Access restricted to: ${allowedRoles.join(', ')}`,
         allowedRoles,
-        userRole: req.user.role,
+        userRole: req.role,
         timestamp: new Date().toISOString()
       });
     }

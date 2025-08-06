@@ -30,6 +30,7 @@ public abstract class AbstractController {
 
     protected ResponseEntity<?> createPageableSuccessResponse(String message, Page<?> page, HttpStatus status) {
         Map<String, Object> response = new HashMap<>();
+        logRequest("Shit", page.getContent());
         response.put("message", message);
         response.put("data", page.getContent());
         response.put("totalElements", page.getTotalElements());

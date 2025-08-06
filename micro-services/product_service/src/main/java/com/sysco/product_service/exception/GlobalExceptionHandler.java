@@ -1,6 +1,5 @@
-package com.sysco.product_service.controller;
+package com.sysco.product_service.exception;
 
-import com.sysco.product_service.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

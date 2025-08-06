@@ -17,13 +17,20 @@ const SortOrder = Object.freeze({
   DESC: 'desc'
 });
 
+const SortBy = Object.freeze({
+  CREATED_AT: 'createdAt',
+  PRICE_LOW_TO_HIGH: 'priceLowToHigh',
+  PRICE_HIGH_TO_LOW: 'priceHighToLow',
+  BEST_MATCH: 'bestMatch'
+})
+
 /**
  * Product status enum
  */
 const ProductStatus = Object.freeze({
-    PENDING: 'pending',
-    REJECTED: 'rejected',
-    ACCEPTED: 'accepted'
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  ACCEPTED: 'ACCEPTED'
 });
 
 /**
@@ -115,6 +122,7 @@ const EnumHelpers = Object.freeze({
 module.exports = {
   ProductSortBy,
   SortOrder,
+  SortBy,
   ProductStatus,
   ProductType,
   UserRole,

@@ -11,6 +11,8 @@ public class ProductRequest {
     private String description;
     private BigDecimal amount;
     private String amountType;
+    private String status;
+    private String sellerId;
     private BigDecimal pricePerUnit;
     private Long categoryId;
     private List<String> images;

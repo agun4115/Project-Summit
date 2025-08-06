@@ -16,7 +16,7 @@ public interface ProductService {
         Long category, 
         String amountType,
         String status,
-        // String seller, 
+        String sellerId, 
         BigDecimal minPrice, 
         BigDecimal maxPrice, 
         Pageable pageable
