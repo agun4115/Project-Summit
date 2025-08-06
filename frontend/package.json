@@ -1,0 +1,24 @@
+{
+  "scripts": {
+    "start": "concurrently \"npm run start:root\" \"npm run start:product\" \"npm run start:auth\" \"npm run start:cart\" \"npm run start:ui\" \"npm run start:shared\" \"npm run start:dashboard\"",
+    "install": "concurrently \"npm install\" \"npm run install:root\" \"npm run install:product\" \"npm run install:auth\" \"npm run install:cart\" \"npm run install:ui\" \"npm run install:shared\" \"npm run install:dashboard\"",
+    "install:root": "cd root-mfe && npm install",
+    "install:product": "cd product-mfe && npm install",
+    "install:auth": "cd auth-mfe && npm install",
+    "install:cart": "cd cart-mfe && npm install",
+    "install:ui": "cd ui-utility && npm install",
+    "install:shared": "cd shared-utility && npm install",
+    "install:dashboard": "cd dashboard-mfe && npm install",
+    "start:root": "cd root-mfe && npm start",
+    "start:product": "cd product-mfe && npm start",
+    "start:auth": "cd auth-mfe && npm start",
+    "start:cart": "cd cart-mfe && npm start",
+    "start:ui": "cd ui-utility && npm start",
+    "start:shared": "cd shared-utility && npm start",
+    "start:dashboard": "cd dashboard-mfe && npm start",
+    "start:bff": "cd ../bff && npm run start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}

@@ -1,0 +1,34 @@
+<single-spa-router>
+  <!--
+
+    This is the single-spa Layout Definition for your microfrontends.
+    See https://single-spa.js.org/docs/layout-definition/ for more information.
+
+  -->
+
+  <!-- Example layouts you might find helpful:
+
+  <nav>
+    <application name="@org/navbar"></application>
+  </nav>
+  <route path="settings">
+    <application name="@org/settings"></application>
+  </route>
+
+  -->
+
+  <main>
+    <route default>
+      <application name="@sysco/product-mfe"></application>
+    </route>
+    <route path="/auth">
+      <application name="@sysco/auth-mfe"></application>
+    </route>    
+    <route path="/cart">
+      <application name="@sysco/cart-mfe"></application>
+    </route>    
+    <route path="/admin">
+      <application name="@sysco/dashboard-mfe"></application>
+    </route>    
+  </main>
+</single-spa-router>
